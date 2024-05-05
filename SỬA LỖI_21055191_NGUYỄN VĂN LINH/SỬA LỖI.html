@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="image">
+        <img src="1.jpg" alt="" />
+      </div>
+      <!--anh1-->
+      <div class="image">
+        <img src="2.jpg" alt="" />
+      </div>
+      <!--anh1-->
+      <div class="image">
+        <img src="3.jpg" alt="" />
+      </div>
+      <!--anh1-->
+      <div class="image">
+        <img src="4.jpg" alt="" />
+      </div>
+      <!--anh1-->
+      <div class="image">
+        <img src="5.jpg" alt="" />
+      </div>
+      <!--anh1-->
+      <div class="image">
+        <img src="6.jpg" alt="" />
+      </div>
+    </div>
+    <div class="gallery">
+      <span class="control prev">
+        <i class="fas fa-chevron-left"></i>
+      </span>
+      <span class="control next">
+        <i class="fas fa-chevron-right"></i>
+      </span>
+      <div class="gallery-inner">
+        <img src="" alt="" />
+      </div>
+      <i class="fas fa-times close"></i>
+    </div>
+  </body>
+</html>
+<style>
+ {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    border: 1px solid black;
+  }
+  
+  body {
+    height: 100vh;
+    background-color: gainsboro;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .wrapper {
+    width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin:0 auto;
+  }
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: 0.25s;
+  }
+.image {
+    width: 20%;
+    height: 200px;
+    overflow: hidden;
+    margin: 10px;
+    border-radius: 4px;
+  }
+  
+.image:hover img {
+    transform: scale(1.2);
+}
+  
+  .gallery {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:gray;
+    /* z-index: 1; */
+    display: flex;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.8);
+    transition: 0.25s;
+  }
+  .close {
+    color: white;
+    font-size: 35px;
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    cursor: pointer;
+  }
+  .control {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  .control.prev {
+    left: 15px;
+  }
+  
+  .control.next {
+    right: 15px;
+  }
+  .gallery-inner {
+    width: 70%;
+    height: 70%;
+    margin: auto;
+  }
+  .show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(0.8);
+  }
+  .hide {
+    display: none;  
+}
+</style>
+<script>
+const images = document.querySelectorAll(".wrapper .image img");
+const next = document.querySelector(".next");
+const prev = document.querySelector(".prev");
+const close = document.querySelector(".close");
+const galleryImg = document.querySelector(".gallery-inner img");
+const gallery = document.querySelector(".gallery");
+
+var currentIndex = 0;
+
+function showGallery() {
+    if (currentIndex == 0) {
+        prev.classList.add('hide')
+    } 
+    else {
+        prev.classList.remove('hide')
+    }
+    if (currentIndex == images.length - 1) {
+        prev.classList.add('hide')
+    }
+    else {
+        prev.classList.remove('hide')
+    }
+    gallery.classList.add("show");
+    galleryImg.src = images[currentIndex].src;
+}
+const intervalTime = 1500;
+let slideInterval;
+
+
+function startSlide() {
+    slideInterval = setInterval(() => {
+        currentIndex++;
+        if (currentIndex >= images.length) {
+            currentIndex = 0;
+        }
+        showGallery();
+    }, intervalTime);
+}
+
+function stopSlide() {
+    clearInterval(slideInterval);
+}
+
+startSlide();
+
+gallery.addEventListener("mouseenter", stopSlide);
+gallery.addEventListener("mouseleave", startSlide);
+
+
+images.forEach((img, index) => {
+  img.addEventListener("click", () => {
+    currentIndex = index;
+    showGallery();
+  });
+});
+
+close.addEventListener("click", () => {
+  gallery.classList.remove("show");
+});
+document.addEventListener("keydown", (e) => {
+    if (e.keycode== 27) gallery.classList.remove("show");
+});
+prev.addEventListener("click", () => {
+    if (currentIndex > 0) {
+        currentIndex--;
+        showGallery();
+    }
+});
+next.addEventListener("click", () => {
+    if (currentIndex < images.length - 1) {
+        currentIndex++;
+        showGallery();
+    }
+})
+</script>
